@@ -13,11 +13,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
-
-
         Button camera_button = (Button) findViewById(R.id.camera_button);
         camera_button.setOnClickListener(this);
     }

@@ -12,7 +12,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
 /**
- * Created by Mark on 11/9/2016.
+ * Simple Splash Loading Screen for SuitUp
  */
 
 public class LoadingActivity extends Activity{
@@ -30,6 +30,8 @@ public class LoadingActivity extends Activity{
             public void run() {
                 try {
                     super.run();
+
+                    // Rotates the loading circle on splash ... android doesn't support gifs :(
                     RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
                             Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                     anim.setInterpolator(new LinearInterpolator());
