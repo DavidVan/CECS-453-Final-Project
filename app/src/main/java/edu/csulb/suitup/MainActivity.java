@@ -15,11 +15,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button camera_button = (Button) findViewById(R.id.camera_button);
         camera_button.setOnClickListener(this);
+
+        Button wrd_mgmt_button = (Button)findViewById(R.id.wrd_mgmt_button);
+        wrd_mgmt_button.setOnClickListener(this);
     }
     @Override
     public void onClick(View v){
-        if(v.getId()== R.id.camera_button){
-            startActivity(new Intent(this, CameraActivity.class));
+        switch (v.getId()) {
+            case (R.id.camera_button):
+                startActivity(new Intent(this, CameraActivity.class));
+                break;
+            case (R.id.wrd_mgmt_button):
+                startActivity(new Intent(this, WardrobeActivity.class));
+                break;
         }
     }
 

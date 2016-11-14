@@ -32,6 +32,9 @@
             android:name=".CameraActivity">
         </activity>
 
+        <activity
+            android:name=".WardrobeActivity">
+        </activity>
     </application>
 
 </manifest>
