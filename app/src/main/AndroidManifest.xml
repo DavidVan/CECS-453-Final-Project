@@ -35,6 +35,10 @@
         <activity
             android:name=".WardrobeActivity">
         </activity>
+        <activity
+            android:name=".ItemDetailActivity">
+        </activity>
     </application>
+
 
 </manifest>
