@@ -3,9 +3,11 @@ package edu.csulb.suitup;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
@@ -31,6 +34,7 @@ import static java.lang.System.exit;
 
 public class WardrobeActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private static final String directory = "/storage/emulated/0/DCIM/Camera";
     private GridView gridView;
     private GridViewAdapter gridAdapter;
     @Override
@@ -51,21 +55,24 @@ public class WardrobeActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(WardrobeActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
             }
         }
-        gridView = (GridView) findViewById(R.id.gridView);
-        gridAdapter = new GridViewAdapter(this, R.layout.wrb_item_gridview_layout, getData());
-        gridView.setAdapter(gridAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                ImageItem item = (ImageItem) parent.getItemAtPosition(position);
-                //Create intent
-                Intent intent = new Intent(WardrobeActivity.this, ItemDetailActivity.class);
-                intent.putExtra("title", item.getTitle());
-                intent.putExtra("image", item.getImage());
+        else{
 
-                //Start details activity
-                startActivity(intent);
-            }
-        });
+            gridView = (GridView) findViewById(R.id.gridView);
+            gridAdapter = new GridViewAdapter(this, R.layout.wrb_item_gridview_layout, getData());
+            gridView.setAdapter(gridAdapter);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    ImageItem item = (ImageItem) parent.getItemAtPosition(position);
+                    //Create intent
+                    Intent intent = new Intent(WardrobeActivity.this, ItemDetailActivity.class);
+                    intent.putExtra("title", item.getTitle());
+                    intent.putExtra("image", item.getImage());
+
+                    //Start details activity
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
@@ -95,49 +102,96 @@ public class WardrobeActivity extends AppCompatActivity {
             // permissions this app might request
         }
     }
-    public File[] getFiles()
+    public ArrayList<File> getFiles()
     {
-        String directory = "/storage/emulated/0/DCIM/Test";
         File dir = new File(directory);
         File[] files = dir.listFiles();
+        ArrayList<File> inFiles = new ArrayList<File>();
 
         if (files != null)
-            return files;
+        {
+            for (File f: files)
+            {
+                if (f.getName().endsWith(".jpg")) {
+                    inFiles.add(f);
+                }
+            }
+        }
         else
             throw new NullPointerException("There is no files in the directory");
+        return inFiles;
     }
 
     private ArrayList<ImageItem> getData() {
-        File[] nFiles;
-        String imgPath = "/storage/emulated/0/DCIM/Test";
+        ArrayList<File> nFiles;
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
 
         try
         {
             nFiles = getFiles();
+            for (int i = 0; i < nFiles.size(); i++)
+            {
+                File f = new File(directory, nFiles.get(i).getName());
+                Bitmap b = decodeSampledBitmapFromResource(f,100,100);
+                imageItems.add(new ImageItem(b, "Image#" + i));
+            }
+            return imageItems;
         }
         catch (NullPointerException e)
         {
             System.err.println("NullPointerException: " + e.getMessage());
-        }
-        finally {
-            nFiles = new File(imgPath).listFiles();
+            return null;
         }
 
+    }
 
-        for (int i = 0; i < nFiles.length; i++)
-        {
-            try {
-                File f=new File(imgPath, nFiles[i].getName());
-                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-                imageItems.add(new ImageItem(b, "Image#" + i));
-            }
-            catch (FileNotFoundException e)
-            {
-                e.printStackTrace();
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
             }
         }
-        return imageItems;
+
+        return inSampleSize;
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(File f,
+                                                         int reqWidth, int reqHeight) {
+
+
+
+
+        try {
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(new FileInputStream(f), new Rect(1,1,1,1), options);
+
+            // Calculate inSampleSize
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeStream(new FileInputStream(f), new Rect(1,1,1,1), options);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("File not found");
+            return null;
+        }
+
     }
 
 }
