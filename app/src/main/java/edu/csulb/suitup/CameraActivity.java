@@ -1,8 +1,11 @@
 package edu.csulb.suitup;
 
+import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,15 +14,19 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -29,15 +36,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.provider.CalendarContract.CalendarCache.URI;
 
-/**
- * Created by Mark on 11/9/2016.
- */
-
 public class CameraActivity extends AppCompatActivity{
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
 
     private ImageView mCameraResult;
     private static String mImagePath;
@@ -46,12 +51,15 @@ public class CameraActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_camera);
         mCameraResult = (ImageView) findViewById(R.id.camera_result);
 
-        // Opens up Dialog Box to choose a category
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+        }
         getCategory();
-
     }
 
 
@@ -60,7 +68,7 @@ public class CameraActivity extends AppCompatActivity{
 
         switch(requestCode) {
             case REQUEST_IMAGE_CAPTURE:
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK ) {
                     // Get a bitmap of the photo taken and the mask image
                     BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                     Bitmap original = BitmapFactory.decodeFile(mImagePath,bmOptions);
@@ -97,6 +105,20 @@ public class CameraActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("success", "Success");
+                }
+            }
+        }
+    }
+
     private void takePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -119,7 +141,7 @@ public class CameraActivity extends AppCompatActivity{
 
     private File getFile(String category) throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         String imageFileName = timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES+"/"+category);
         File image = File.createTempFile(
@@ -144,7 +166,6 @@ public class CameraActivity extends AppCompatActivity{
                 mCategory = items[item];
                 dialog.dismiss();
                 // Opens up Camera to take a picture
-                Toast.makeText(getApplicationContext(), mCategory, Toast.LENGTH_LONG).show();
                 takePictureIntent();
             }
         });
