@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Suit Up</string>
+    <string name="location_placeholder">No Location</string>
+    <string name="get_location">Get Location</string>
+    <string name="weather_placeholder">No Weather</string>
+    <string name="get_weahter">Get Weather</string>
 </resources>

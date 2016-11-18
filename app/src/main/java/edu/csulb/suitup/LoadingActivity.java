@@ -15,7 +15,7 @@ import android.widget.ImageView;
  * Simple Splash Loading Screen for SuitUp
  */
 
-public class LoadingActivity extends Activity{
+public class LoadingActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
