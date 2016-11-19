@@ -43,6 +43,7 @@ import static android.provider.CalendarContract.CalendarCache.URI;
 public class CameraActivity extends AppCompatActivity{
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
+    static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
 
     private ImageView mCameraResult;
     private static String mImagePath;
@@ -58,6 +59,9 @@ public class CameraActivity extends AppCompatActivity{
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         }
         getCategory();
     }
@@ -102,6 +106,13 @@ public class CameraActivity extends AppCompatActivity{
                     }
                 }
                 break;
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (resultCode == RESULT_OK ) {
+                    // don't need to do anything here.
+                    //previous request already handles writing to storage
+                }
+                break;
+
         }
     }
 

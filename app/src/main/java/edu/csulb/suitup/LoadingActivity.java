@@ -1,7 +1,9 @@
 package edu.csulb.suitup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
@@ -16,6 +18,9 @@ import android.widget.ImageView;
  */
 
 public class LoadingActivity extends Activity {
+
+    // create db to test. it's working
+    private SQLiteDatabase mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +60,8 @@ public class LoadingActivity extends Activity {
         };
         loadingScreen.start();
 
+        // create the db to test
+        mDatabase = new WardrobeDbHelper(this).getWritableDatabase();
+        mDatabase.close();
     }
 }
