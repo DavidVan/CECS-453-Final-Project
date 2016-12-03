@@ -1,8 +1,6 @@
 package edu.csulb.suitup;
 
 import android.Manifest;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,21 +11,15 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
-import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -38,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static android.provider.CalendarContract.CalendarCache.URI;
 
 public class CameraActivity extends AppCompatActivity{
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -85,14 +76,18 @@ public class CameraActivity extends AppCompatActivity{
                             original.getHeight(), matrix, true);
 
                     // Use PorterDuff to mask original image with the mask image
-                    Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(result);
-                    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-                    canvas.drawBitmap(original, 0, 0, null);
-                    canvas.drawBitmap(mask, 0, 0, paint);
-                    paint.setXfermode(null);
+//                    Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
+//                    Canvas canvas = new Canvas(result);
+//                    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//                    paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+//                    canvas.drawBitmap(original, 0, 0, null);
+//                    canvas.drawBitmap(mask, 0, 0, paint);
+//                    paint.setXfermode(null);
+                    Bitmap result = original;
                     mCameraResult.setImageBitmap(result);
+                    // Adds the photo to the database
+                    WardrobeDbHelper dbhelper = new WardrobeDbHelper(getApplicationContext());
+                    dbhelper.addWardrobe("Sample Desc", mImagePath, mCategory);
 
                     try {
                         // Overwrite the original file with the masked photo.
@@ -106,6 +101,7 @@ public class CameraActivity extends AppCompatActivity{
                     }
                 }
                 break;
+
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (resultCode == RESULT_OK ) {
                     // don't need to do anything here.
@@ -168,7 +164,7 @@ public class CameraActivity extends AppCompatActivity{
 
 
     private void getCategory(){
-        final String[] items = {"Shirt", "Pants", "Shoes"};
+        final String[] items = {"Top", "Bottom", "Shoes"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose a Category");
         builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
