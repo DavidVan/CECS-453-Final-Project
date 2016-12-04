@@ -150,8 +150,8 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     public List<Wardrobe> getTop(){
         List<Wardrobe> tops = new ArrayList<>();
         String selectQuery =
-                "SELECT * FROM " + EXCLUSION_TABLE_NAME +
-                "WHERE " + CATEGORY_COLUMN + "= ?";
+                "SELECT * FROM " + WARDROBE_TABLE_NAME +
+                " WHERE " + CATEGORY_COLUMN + " = ?";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, new String[] {"Top"});
@@ -177,8 +177,8 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     public List<Wardrobe> getBottom(){
         List<Wardrobe> bottoms = new ArrayList<>();
         String selectQuery =
-                "SELECT * FROM " + EXCLUSION_TABLE_NAME +
-                        "WHERE " + CATEGORY_COLUMN + "= ?";
+                "SELECT * FROM " + WARDROBE_TABLE_NAME +
+                        " WHERE " + CATEGORY_COLUMN + " = ?";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, new String[] {"Bottom"});
@@ -204,8 +204,8 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     public List<Wardrobe> getShoes(){
         List<Wardrobe> shoes = new ArrayList<>();
         String selectQuery =
-                "SELECT * FROM " + EXCLUSION_TABLE_NAME +
-                        "WHERE " + CATEGORY_COLUMN + "= ?";
+                "SELECT * FROM " + WARDROBE_TABLE_NAME +
+                        " WHERE " + CATEGORY_COLUMN + " = ?";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, new String[] {"Shoes"});

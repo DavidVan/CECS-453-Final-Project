@@ -75,6 +75,7 @@ public class CameraActivity extends AppCompatActivity{
                     original = Bitmap.createBitmap(original , 0, 0, original.getWidth(),
                             original.getHeight(), matrix, true);
 
+                    // DISABLED MASKING FOR NOW...
                     // Use PorterDuff to mask original image with the mask image
 //                    Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
 //                    Canvas canvas = new Canvas(result);
@@ -84,17 +85,18 @@ public class CameraActivity extends AppCompatActivity{
 //                    canvas.drawBitmap(mask, 0, 0, paint);
 //                    paint.setXfermode(null);
                     Bitmap result = original;
-                    mCameraResult.setImageBitmap(result);
-                    // Adds the photo to the database
-                    WardrobeDbHelper dbhelper = new WardrobeDbHelper(getApplicationContext());
-                    dbhelper.addWardrobe("Sample Desc", mImagePath, mCategory);
 
                     try {
-                        // Overwrite the original file with the masked photo.
+                        // Overwrite the original file with a resized version.
                         File pictureFile = new File(mImagePath);
                         FileOutputStream fos = new FileOutputStream(pictureFile);
-                        result.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+                        result.compress(Bitmap.CompressFormat.JPEG, 40, fos);
                         fos.close();
+
+                        // Adds the photo to the database
+                        WardrobeDbHelper dbhelper = new WardrobeDbHelper(getApplicationContext());
+                        dbhelper.addWardrobe("Sample Desc", mImagePath, mCategory);
+                        finish();
 
                     } catch (Exception ex) {
                         System.out.println(ex);
