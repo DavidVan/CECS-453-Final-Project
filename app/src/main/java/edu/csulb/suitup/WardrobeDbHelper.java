@@ -30,7 +30,7 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     public static final String CLOTHES_ID_COLUMN = "clothesid";
 
     // exclusion table columns
-    public static final String TOP_ID_COLUMN = "bottomid";
+    public static final String TOP_ID_COLUMN = "topid";
     public static final String BOTTOM_ID_COLUMN = "bottomid";
     public static final String SHOES_ID_COLUMN = "shoesid";
 
@@ -44,17 +44,17 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     // Create statement
     private static final String WARDROBE_TABLE_CREATE = String.format(
             "CREATE TABLE %s(" +                                //table name
-                    "%s integer primary key autoincrement," +   // _id
-                    "%s text," +                                // description
-                    "%s text" +                                 // filepath
+                    "%s integer primary key autoincrement, " +   // _id
+                    "%s text, " +                                // description
+                    "%s text, " +                                 // filepath
                     "%s text)",                                 // category
             WARDROBE_TABLE_NAME, ID_COLUMN, DESCRIPTION_COLUMN, FILEPATH_COLUMN, CATEGORY_COLUMN);
 
     private static final String TAG_TABLE_CREATE = String.format(
             "CREATE TABLE %s(" +                                // TABLE NAME
-                    "%s integer primary key autoincrement," +   // _id
-                    "%s integer not null check(%s > 0)," +      // clothes id
-                    "%s text," +                                // tags
+                    "%s integer primary key autoincrement, " +   // _id
+                    "%s integer not null check(%s > 0), " +      // clothes id
+                    "%s text, " +                                // tags
                     "foreign key(%s) references %s(%s))",       // clothes id foreign key to wardrobe table, _id
             TAG_TABLE_NAME,
             ID_COLUMN,
@@ -64,12 +64,12 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
 
     private static final String EXCLUSION_TABLE_CREATE = String.format(
             "CREATE TABLE %s(" +                                    //table name
-                    "%s integer primary key autoincrement," +       // _id
-                    "%s integer check(%s > 0)," +                   // top_id
-                    "%s integer check(%s > 0)," +                   // bottom id
-                    "%s integer check(%s > 0)," +                   // shoes id
-                    "foreign key(%s) references %s(%s)," +          // top id foreign key to wardrobe table, _id
-                    "foreign key(%s) references %s(%s)," +          // bottom id foreign key to wardrobe table, _id
+                    "%s integer primary key autoincrement, " +       // _id
+                    "%s integer check(%s > 0), " +                   // top_id
+                    "%s integer check(%s > 0), " +                   // bottom id
+                    "%s integer check(%s > 0), " +                   // shoes id
+                    "foreign key(%s) references %s(%s), " +          // top id foreign key to wardrobe table, _id
+                    "foreign key(%s) references %s(%s), " +          // bottom id foreign key to wardrobe table, _id
                     "foreign key(%s) references %s(%s))",           // bottom id foreign key to wardrobe table, _id
             EXCLUSION_TABLE_NAME, ID_COLUMN,
             TOP_ID_COLUMN, TOP_ID_COLUMN,
