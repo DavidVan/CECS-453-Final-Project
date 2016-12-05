@@ -146,6 +146,32 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Retrieve all
+    public List<Wardrobe> getAll()
+    {
+        List<Wardrobe> all = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + WARDROBE_TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(0);
+                String description = cursor.getString(1);
+                String filepath = cursor.getString(2);
+                String category = cursor.getString(3);
+
+                all.add(new Wardrobe(id, description, filepath, category));
+            }while(cursor.moveToNext());
+        }
+        // closing connections
+        cursor.close();
+        db.close();
+
+        return all;
+    }
+
+
     // Retrieve a list of Top Wardrobe Objects
     public List<Wardrobe> getTop(){
         List<Wardrobe> tops = new ArrayList<>();
