@@ -28,4 +28,13 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/camera_button"/>
 
+    <Button
+        android:id="@+id/random_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suit Up!"
+        android:layout_marginTop="14dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/location_button"/>
+
 </RelativeLayout>
