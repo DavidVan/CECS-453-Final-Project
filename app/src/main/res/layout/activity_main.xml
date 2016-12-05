@@ -5,36 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.csulb.suitup.MainActivity">
-
-    <Button
-        android:id="@+id/camera_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Take a Picture"
-        android:layout_marginTop="14dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+    tools:context="edu.csulb.suitup.MainActivity"
+    android:background="@drawable/suitbg">
 
     <Button
         android:id="@+id/location_button"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Check Location"
-        android:layout_marginTop="14dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/camera_button"/>
+        android:background="@drawable/gradient"
+        android:layout_above="@+id/random_button"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp" />
 
     <Button
         android:id="@+id/random_button"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Suit Up!"
-        android:layout_marginTop="14dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/location_button"/>
+        android:background="@drawable/gradient"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Take a Picture"
+        android:background="@drawable/gradient"
+        android:layout_above="@+id/location_button"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
