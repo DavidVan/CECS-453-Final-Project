@@ -6,11 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,6 +34,7 @@ public class CameraActivity extends AppCompatActivity{
 
     private ImageView mCameraResult;
     private static String mImagePath;
+    private static Uri mImageUri;
     private static String mCategory;
 
     @Override
@@ -67,7 +64,7 @@ public class CameraActivity extends AppCompatActivity{
                     // Get a bitmap of the photo taken and the mask image
                     BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                     Bitmap original = BitmapFactory.decodeFile(mImagePath,bmOptions);
-                    Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.tshirt);
+//                    Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.tshirt);
 
                     // This will rotate the original image 90degrees bc it comes out landscape before
                     Matrix matrix = new Matrix();
@@ -84,19 +81,21 @@ public class CameraActivity extends AppCompatActivity{
 //                    canvas.drawBitmap(original, 0, 0, null);
 //                    canvas.drawBitmap(mask, 0, 0, paint);
 //                    paint.setXfermode(null);
-                    Bitmap result = original;
+
+                    Bitmap result =  Bitmap.createScaledBitmap(original, 774, 1376, true);
 
                     try {
                         // Overwrite the original file with a resized version.
                         File pictureFile = new File(mImagePath);
                         FileOutputStream fos = new FileOutputStream(pictureFile);
-                        result.compress(Bitmap.CompressFormat.JPEG, 40, fos);
+                        result.compress(Bitmap.CompressFormat.JPEG, 50, fos);
                         fos.close();
 
                         // Adds the photo to the database
                         WardrobeDbHelper dbhelper = new WardrobeDbHelper(getApplicationContext());
                         dbhelper.addWardrobe("Sample Desc", mImagePath, mCategory);
-                        finish();
+
+                        mCameraResult.setImageURI(mImageUri);
 
                     } catch (Exception ex) {
                         System.out.println(ex);
@@ -110,7 +109,6 @@ public class CameraActivity extends AppCompatActivity{
                     //previous request already handles writing to storage
                 }
                 break;
-
         }
     }
 
@@ -142,6 +140,7 @@ public class CameraActivity extends AppCompatActivity{
             if (photoFile != null) {
                 // Attach a File URI to the intent to link camera output with the file created
                 Uri photoURI = Uri.fromFile(photoFile);
+                mImageUri = photoURI;
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -164,7 +163,7 @@ public class CameraActivity extends AppCompatActivity{
         return image;
     }
 
-
+    // Will open up a dialog to choose category of the apparel
     private void getCategory(){
         final String[] items = {"Top", "Bottom", "Shoes"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -181,5 +180,4 @@ public class CameraActivity extends AppCompatActivity{
         AlertDialog alert = builder.create();
         alert.show();
     }
-
 }

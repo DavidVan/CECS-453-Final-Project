@@ -1,12 +1,16 @@
 package edu.csulb.suitup;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 
@@ -47,7 +51,7 @@ public class RandomWardrobeActivity extends AppCompatActivity {
             ImageView bottomview = (ImageView) findViewById(R.id.bottom_view);
             ImageView shoesview = (ImageView) findViewById(R.id.shoes_view);
 
-            Toast.makeText(getApplicationContext(), randtop.getFilepath(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "file:/"+randtop.getFilepath(), Toast.LENGTH_LONG).show();
 
             // Set View's Images
             topview.setImageBitmap(BitmapFactory.decodeFile(randtop.getFilepath()));
