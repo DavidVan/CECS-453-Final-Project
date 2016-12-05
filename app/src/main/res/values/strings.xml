@@ -4,4 +4,13 @@
     <string name="get_location">Get Location</string>
     <string name="weather_placeholder">No Weather</string>
     <string name="get_weahter">Get Weather</string>
+    <string-array name="view_selection">
+        <item>Shirts</item>
+        <item>Pants</item>
+        <item>Shoes</item>
+        <item>All</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
