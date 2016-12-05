@@ -1,30 +1,43 @@
 package edu.csulb.suitup;
 
+import java.util.Objects;
+
 /**
  * A Wardrobe Combination class
- * consisting of combinations of shirts, pants, and shoes
+ * consisting of combinations of tops, bottom, and shoes
  */
 
 public class WardrobeCombination {
-    private int shirt_id;
-    private int pants_id;
+    private int top_id;
+    private int bottom_id;
     private int shoes_id;
 
-    public WardrobeCombination(int shirt, int pants, int shoes){
-        shirt_id = shirt;
-        pants_id = pants;
+    public WardrobeCombination(int top, int bottom, int shoes){
+        top_id = top;
+        bottom_id = bottom;
         shoes_id = shoes;
     }
 
-    public int getShirt(){
-        return shirt_id;
+    public int getTop(){
+        return top_id;
     }
 
-    public int getPants(){
-        return pants_id;
+    public int getBottom(){
+        return bottom_id;
     }
 
     public int getShoes(){
         return shoes_id;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        WardrobeCombination obj = (WardrobeCombination) o;
+        if((obj.getShoes() == this.getShoes()) &&
+                (obj.getTop() == this.getTop()) &&
+                (obj.getBottom() == this.getBottom())){
+            return true;
+        }
+        return false;
     }
 }

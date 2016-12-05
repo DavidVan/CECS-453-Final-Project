@@ -18,7 +18,7 @@ public class Wardrobe {
         category = c;
     }
     public Wardrobe(int id, String desc, String path, String c){
-        int db_id = id;
+        db_id = id;
         description = desc;
         filepath = path;
         category = c;

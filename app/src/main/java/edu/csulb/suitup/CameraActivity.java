@@ -34,7 +34,6 @@ public class CameraActivity extends AppCompatActivity{
 
     private ImageView mCameraResult;
     private static String mImagePath;
-    private static Uri mImageUri;
     private static String mCategory;
 
     @Override
@@ -95,7 +94,8 @@ public class CameraActivity extends AppCompatActivity{
                         WardrobeDbHelper dbhelper = new WardrobeDbHelper(getApplicationContext());
                         dbhelper.addWardrobe("Sample Desc", mImagePath, mCategory);
 
-                        mCameraResult.setImageURI(mImageUri);
+                        // closes the activity
+                        finish();
 
                     } catch (Exception ex) {
                         System.out.println(ex);
@@ -140,7 +140,6 @@ public class CameraActivity extends AppCompatActivity{
             if (photoFile != null) {
                 // Attach a File URI to the intent to link camera output with the file created
                 Uri photoURI = Uri.fromFile(photoFile);
-                mImageUri = photoURI;
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
