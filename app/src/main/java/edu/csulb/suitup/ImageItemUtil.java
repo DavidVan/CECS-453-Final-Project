@@ -30,22 +30,22 @@ public class ImageItemUtil {
     into the ImageItem
      */
     public ArrayList<ImageItem> getData(String type) {
-        List<Wardrobe> wardrobe_item = new ArrayList<>();
+        List<Wardrobe> wardrobe_item = new ArrayList<>();;
         HashMap<Integer, List<String>> tagsmap = new HashMap<Integer, List<String>>(db.getTags());
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
 
         switch (type){
             case ("Top"):
-                wardrobe_item = db.getTop();
+                wardrobe_item.addAll(db.getTop());
                 break;
             case ("Bottom"):
-                wardrobe_item = db.getBottom();
+                wardrobe_item.addAll(db.getBottom());
                 break;
             case ("Shoes"):
-                wardrobe_item = db.getShoes();
+                wardrobe_item.addAll(db.getShoes());
                 break;
             case ("All"):
-                wardrobe_item = db.getAll();
+                wardrobe_item.addAll(db.getAll());
                 break;
         }
 
@@ -56,12 +56,15 @@ public class ImageItemUtil {
                 Wardrobe wardrobe = wardrobe_item.get(i);
                 String filepath = wardrobe.getFilepath();
                 List<String> tags = new ArrayList<String>();
+                // for testing. Need to add real tags
                 tags.add("fucking awesome");
+                tags.add("hero baby");
+                String cat = wardrobe.getCategory();
                 File f = new File(filepath);
                 Bitmap b = decodeSampledBitmapFromResource(f,100,100);
-                System.out.println(tags.get(0));
-                ImageItem imageItem = new ImageItem(b, wardrobe.getDescription(), tags);
-                imageItems.add(imageItem);
+
+                imageItems.add(new ImageItem(wardrobe.getId(), b, wardrobe.getDescription(), tags, cat));
+                System.out.println(imageItems.get(i).getId());
             }
             return imageItems;
         }

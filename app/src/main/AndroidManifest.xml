@@ -38,7 +38,8 @@
         <activity android:name=".CameraActivity" />
         <activity android:name=".LocationActivity" />
         <activity android:name=".ItemDetailActivity" />
-        <activity android:name=".WardrobeMgmtActivity"></activity>
+        <activity android:name=".WardrobeMgmtActivity" />
+        <activity android:name=".ItemEditActivity"></activity>
     </application>
 
 </manifest>

@@ -188,7 +188,6 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
                 String description = cursor.getString(1);
                 String filepath = cursor.getString(2);
                 String category = cursor.getString(3);
-
                 tops.add(new Wardrobe(id, description, filepath, category));
             }while(cursor.moveToNext());
         }
@@ -317,7 +316,6 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     }
 
 
-
     // TODO: Fill these in
     public void removeExclusion(int exclusion_id){
 
@@ -327,7 +325,16 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
 
     }
 
+    public void removeTag(int clothes_id){
+        String deleteQuery = "DELETE FROM " + TAG_TABLE_NAME + "WHERE " + CLOTHES_ID_COLUMN + " = ?";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(deleteQuery, new String[] {Integer.toString(clothes_id)});
+
+    }
+
     public void removeTag(int clothes_id, String tag){
+
 
     }
 }

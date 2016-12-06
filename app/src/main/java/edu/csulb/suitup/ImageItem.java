@@ -14,18 +14,28 @@ This class is used to display the Image when user clicks on gridView
  */
 
 public class ImageItem {
+    private int id;
     private Bitmap image;
     private String description;
     private ArrayList<String> tags;
+    private String category;
 
-    public ImageItem(Bitmap image, String desc, List<String> Tags) {
+    public ImageItem(int _id, Bitmap image, String desc, List<String> Tags, String cat) {
         super();
+        this.id = _id;
         this.image = image;
         this.description = desc;
-        this.tags = new ArrayList<String>();
-        this.tags.addAll(Tags);
+        this.tags = new ArrayList<String>(Tags);
+        this.category = cat;
     }
 
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int _id){
+        this.id = _id;
+    }
     public Bitmap getImage() {
         return image;
     }
@@ -48,5 +58,12 @@ public class ImageItem {
     public void setTags(List<String> Tags) {
         tags.clear();
         tags.addAll(Tags);
+    }
+
+    public String getCategory(){
+        return category;
+    }
+    public void setCategory(String cat){
+        category = cat;
     }
 }

@@ -35,7 +35,7 @@ public class WardrobeFragment extends Fragment {
         return wardrobeFragment;
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_wardrobe, container, false);
@@ -53,7 +53,15 @@ public class WardrobeFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
                 intent.putExtra("title", item.getDescription());
                 intent.putExtra("image", item.getImage());
-
+                String tags = "";
+                for (int i = 0; i < item.getTags().size(); i++)
+                {
+                    tags += item.getTags().get(i) + ", ";
+                }
+                String tag = tags.substring(0, tags.length() - 2);
+                intent.putExtra("tags", tag);
+                intent.putExtra("category", item.getCategory());
+                intent.putExtra("id",item.getId());
                 //Start details activity
                 startActivity(intent);
             }

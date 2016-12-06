@@ -1,28 +1,58 @@
 package edu.csulb.suitup;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 /*
 This activity is used to display the images when user clicks in gridView
  */
-public class ItemDetailActivity extends AppCompatActivity {
-
+public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener{
+    String title = "";
+    Bitmap bitmap;
+    String tags = "";
+    int id = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
-        String title = getIntent().getStringExtra("title");
-        Bitmap bitmap = getIntent().getParcelableExtra("image");
+        title = getIntent().getStringExtra("title");
+        bitmap = getIntent().getParcelableExtra("image");
+        tags = getIntent().getStringExtra("tags");
+        id = getIntent().getIntExtra("id",1);
 
         TextView titleTextView = (TextView) findViewById(R.id.title);
         titleTextView.setText(title);
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
         imageView.setImageBitmap(bitmap);
+
+        TextView tagsTextView = (TextView)findViewById(R.id.tags);
+        tagsTextView.setText(tags);
+
+        Button edit_button = (Button)findViewById(R.id.edit_record_btn);
+        Button delete_button = (Button) findViewById(R.id.delete_record_btn);
+
+        edit_button.setOnClickListener(this);
+        delete_button.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId()== R.id.edit_record_btn){
+            Intent intent = new Intent(this, ItemEditActivity.class);
+            intent.putExtra("description", title);
+            intent.putExtra("id", id);
+            intent.putExtra("tags", tags);
+            startActivity(intent);
+        }
     }
 }
