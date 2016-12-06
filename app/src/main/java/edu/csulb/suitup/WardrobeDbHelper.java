@@ -322,19 +322,28 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     }
 
     public void removeWardrobe(int clothes_id){
-
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(WARDROBE_TABLE_NAME, ID_COLUMN + "=" + clothes_id, null);
     }
 
     public void removeTag(int clothes_id){
-        String deleteQuery = "DELETE FROM " + TAG_TABLE_NAME + "WHERE " + CLOTHES_ID_COLUMN + " = ?";
+        //String deleteQuery = "DELETE FROM " + TAG_TABLE_NAME + "WHERE " + CLOTHES_ID_COLUMN + " = ?";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(deleteQuery, new String[] {Integer.toString(clothes_id)});
-
+        db.delete(TAG_TABLE_NAME, CLOTHES_ID_COLUMN + "=" + Integer.toString(clothes_id), null);
     }
 
     public void removeTag(int clothes_id, String tag){
 
 
+    }
+
+    public void updateDescription(int id, String description)
+    {
+        //String updateQuery = "UPDATE " + WARDROBE_TABLE_NAME + "SET " + DESCRIPTION_COLUMN + "= ? WHERE " + ID_COLUMN + "= ?";
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DESCRIPTION_COLUMN, description);
+        db.update(WARDROBE_TABLE_NAME, contentValues, ID_COLUMN + "=" + id, null);
     }
 }

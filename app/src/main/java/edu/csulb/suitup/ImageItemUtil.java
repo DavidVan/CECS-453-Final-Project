@@ -57,8 +57,11 @@ public class ImageItemUtil {
                 String filepath = wardrobe.getFilepath();
                 List<String> tags = new ArrayList<String>();
                 // for testing. Need to add real tags
-                tags.add("fucking awesome");
-                tags.add("hero baby");
+                if (tagsmap.get(wardrobe.getId()) == null)
+                    tags.add("");
+                else
+                    tags.addAll(tagsmap.get(wardrobe.getId()));
+                System.out.println(tags);
                 String cat = wardrobe.getCategory();
                 File f = new File(filepath);
                 Bitmap b = decodeSampledBitmapFromResource(f,100,100);

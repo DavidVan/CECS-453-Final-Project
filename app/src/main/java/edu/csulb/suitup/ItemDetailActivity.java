@@ -15,6 +15,7 @@ import org.w3c.dom.Text;
 This activity is used to display the images when user clicks in gridView
  */
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener{
+    private WardrobeDbHelper dbHelper = new WardrobeDbHelper(this);
     String title = "";
     Bitmap bitmap;
     String tags = "";
@@ -53,6 +54,12 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             intent.putExtra("id", id);
             intent.putExtra("tags", tags);
             startActivity(intent);
+        }
+        if (v.getId()==R.id.delete_record_btn){
+            dbHelper.removeWardrobe(id);
+            //will need to delete from disk as well.
+            startActivity(new Intent(this, WardrobeMgmtActivity.class));
+            finish();
         }
     }
 }
