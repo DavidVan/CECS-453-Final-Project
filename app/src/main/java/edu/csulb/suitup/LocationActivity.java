@@ -67,7 +67,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
             }
         });
 
-        Button getWeather = (Button) findViewById(R.id.get_weather_button);
+        final Button getWeather = (Button) findViewById(R.id.get_weather_button);
         getWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,8 +79,6 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
 
                 WeatherTask task = new WeatherTask(instance, location);
                 task.execute(jsonURL);
-                TextView weatherText = (TextView) findViewById(R.id.weather_text);
-                weatherText.setText(weatherCondition);
             }
         });
     }
@@ -92,16 +90,15 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
     }
 
     public String getLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_GET_LOCATION_PERMISSIONS);
-        }
         String cityStateZip = "";
         Geocoder geocoder = new Geocoder(this);
         List<Address> locations;
         Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         try {
+            if (lastLocation == null) {
+                return "";
+            }
             locations = geocoder.getFromLocation(lastLocation.getLatitude(), lastLocation.getLongitude(), 10);
         }
         catch (IOException e) {
@@ -185,6 +182,8 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
             JSONArray forecastArray = itemObject.getJSONArray("forecast");
             JSONObject forecastForToday = forecastArray.getJSONObject(0);
             weatherCondition = forecastForToday.getString("text");
+            TextView weatherText = (TextView) findViewById(R.id.weather_text);
+            weatherText.setText(weatherCondition);
         }
         catch (Exception e) {
             e.printStackTrace();
