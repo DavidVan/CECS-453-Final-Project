@@ -65,10 +65,12 @@ public class CameraActivity extends AppCompatActivity{
                     Bitmap original = BitmapFactory.decodeFile(mImagePath,bmOptions);
 //                    Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.tshirt);
 
+                    original =  Bitmap.createScaledBitmap(original, 1376, 774, true);
+
                     // This will rotate the original image 90degrees bc it comes out landscape before
                     Matrix matrix = new Matrix();
                     matrix.postRotate(90);
-                    original = Bitmap.createBitmap(original , 0, 0, original.getWidth(),
+                    Bitmap result = Bitmap.createBitmap(original , 0, 0, original.getWidth(),
                             original.getHeight(), matrix, true);
 
                     // DISABLED MASKING FOR NOW...
@@ -81,7 +83,6 @@ public class CameraActivity extends AppCompatActivity{
 //                    canvas.drawBitmap(mask, 0, 0, paint);
 //                    paint.setXfermode(null);
 
-                    Bitmap result =  Bitmap.createScaledBitmap(original, 774, 1376, true);
 
                     try {
                         // Overwrite the original file with a resized version.
