@@ -29,9 +29,8 @@ import java.util.Locale;
 
 
 public class CameraActivity extends AppCompatActivity{
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
-    static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
+    static final int MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE = 1;
 
     private ImageView mCameraResult;
     private static String mImagePath;
@@ -45,11 +44,8 @@ public class CameraActivity extends AppCompatActivity{
         setContentView(R.layout.activity_camera);
         mCameraResult = (ImageView) findViewById(R.id.camera_result);
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
         }
         getCategory();
     }
@@ -59,7 +55,7 @@ public class CameraActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch(requestCode) {
-            case REQUEST_IMAGE_CAPTURE:
+            case MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE:
                 if (resultCode == RESULT_OK ) {
                     // Get a bitmap of the photo taken and the mask image
                     BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -104,13 +100,6 @@ public class CameraActivity extends AppCompatActivity{
                     }
                 }
                 break;
-
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (resultCode == RESULT_OK ) {
-                    // don't need to do anything here.
-                    //previous request already handles writing to storage
-                }
-                break;
         }
     }
 
@@ -118,7 +107,7 @@ public class CameraActivity extends AppCompatActivity{
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CAMERA: {
+            case MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -143,7 +132,7 @@ public class CameraActivity extends AppCompatActivity{
                 // Attach a File URI to the intent to link camera output with the file created
                 Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".provider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE);
             }
         }
     }
