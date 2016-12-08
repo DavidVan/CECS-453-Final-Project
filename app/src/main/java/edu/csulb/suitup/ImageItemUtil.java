@@ -31,7 +31,7 @@ public class ImageItemUtil {
      */
     public ArrayList<ImageItem> getData(String type) {
         List<Wardrobe> wardrobe_item = new ArrayList<>();;
-        HashMap<Integer, List<String>> tagsmap = new HashMap<Integer, List<String>>(db.getTags());
+        HashMap<Integer, List<String>> tagsmap = db.getTags();
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
 
         switch (type){
@@ -65,8 +65,8 @@ public class ImageItemUtil {
                 String cat = wardrobe.getCategory();
                 File f = new File(filepath);
                 Bitmap b = decodeSampledBitmapFromResource(f,100,100);
-
-                imageItems.add(new ImageItem(wardrobe.getId(), b, wardrobe.getDescription(), tags, cat));
+                //Bitmap b = BitmapFactory.decodeFile(filepath);
+                imageItems.add(new ImageItem(wardrobe.getId(), b, wardrobe.getDescription(), tags, cat, filepath));
                 System.out.println(imageItems.get(i).getId());
             }
             return imageItems;
@@ -101,7 +101,7 @@ public class ImageItemUtil {
         return inSampleSize;
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(File f,
+    public static final Bitmap decodeSampledBitmapFromResource(File f,
                                                          int reqWidth, int reqHeight) {
 
         try {

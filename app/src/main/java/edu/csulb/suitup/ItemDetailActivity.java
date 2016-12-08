@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+
 /*
 This activity is used to display the images when user clicks in gridView
  */
@@ -20,13 +22,15 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     Bitmap bitmap;
     String tags = "";
     int id = 0;
+    ImageItemUtil util = new ImageItemUtil(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
         title = getIntent().getStringExtra("title");
-        bitmap = getIntent().getParcelableExtra("image");
+        //bitmap = getIntent().getParcelableExtra("image");
+        String path = getIntent().getStringExtra("path");
         tags = getIntent().getStringExtra("tags");
         id = getIntent().getIntExtra("id",1);
 
@@ -34,6 +38,8 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         titleTextView.setText(title);
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
+        File f = new File(path);
+        bitmap = util.decodeSampledBitmapFromResource(f, 400, 400);
         imageView.setImageBitmap(bitmap);
 
         TextView tagsTextView = (TextView)findViewById(R.id.tags);

@@ -19,14 +19,16 @@ public class ImageItem {
     private String description;
     private ArrayList<String> tags;
     private String category;
+    private String filepath;
 
-    public ImageItem(int _id, Bitmap image, String desc, List<String> Tags, String cat) {
+    public ImageItem(int _id, Bitmap image, String desc, List<String> Tags, String cat, String filep) {
         super();
         this.id = _id;
         this.image = image;
         this.description = desc;
         this.tags = new ArrayList<String>(Tags);
         this.category = cat;
+        this.filepath = filep;
     }
 
     public int getId(){
@@ -66,4 +68,6 @@ public class ImageItem {
     public void setCategory(String cat){
         category = cat;
     }
+    public String getFilepath() {return filepath;}
+    public void setFilepath(String path) {filepath = path;}
 }

@@ -56,6 +56,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                 dbHelper.removeTag(id);
                 for (int i = 0; i< newTags.length; i ++)
                 {
+                    System.out.println(newTags[i]);
                     dbHelper.addTag(id, newTags[i]);
                 }
                 //Toast.makeText(this, newTags[2], Toast.LENGTH_SHORT).show();

@@ -62,6 +62,7 @@ public class WardrobeFragment extends Fragment {
                 intent.putExtra("tags", tag);
                 intent.putExtra("category", item.getCategory());
                 intent.putExtra("id",item.getId());
+                intent.putExtra("path", item.getFilepath());
                 //Start details activity
                 startActivity(intent);
             }

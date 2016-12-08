@@ -137,12 +137,17 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     public void addTag(int clothes_id, String tag){
         SQLiteDatabase db = this.getWritableDatabase();
 
+        /*
+        Troubleshooting
+         */
+        System.out.println("Adding tag: " + tag);
         ContentValues values = new ContentValues();
         values.put(CLOTHES_ID_COLUMN, clothes_id);
         values.put(TAGS_COLUMN, tag);
 
         // Inserting Row
-        db.insert(TAG_TABLE_NAME, null, values);
+        long res = db.insert(TAG_TABLE_NAME, null, values);
+        System.out.println(res);
         db.close();
     }
 
@@ -257,7 +262,7 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     // Not sure if we need this hashmap ... but might come in handy for the future.
     public HashMap<Integer, List<String>> getTags(){
         HashMap<Integer, List<String>> tagsmap = new HashMap<>();
-        String selectQuery = "SELECT * FROM " + EXCLUSION_TABLE_NAME;
+        String selectQuery = "SELECT * FROM " + TAG_TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -270,7 +275,8 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
 
                 // if clothes id already exists in hashmap, add the tag to its list
                 if(tagsmap.containsKey(id)){
-                    tagsmap.get(id).add(tag);
+                    boolean res = tagsmap.get(id).add(tag);
+
                 }
                 else{
                     // add a new k/v pair into the map
@@ -280,6 +286,7 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
                 }
             }while(cursor.moveToNext());
         }
+
 
         // closing connections
         cursor.close();
