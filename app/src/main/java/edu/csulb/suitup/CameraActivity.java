@@ -30,8 +30,7 @@ import java.util.Locale;
 
 
 public class CameraActivity extends AppCompatActivity {
-    static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
-    static final int MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE = 1;
+    static final int MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE = 0;
 
     private ImageView mCameraResult;
     private static String mImagePath;
@@ -46,9 +45,11 @@ public class CameraActivity extends AppCompatActivity {
         mCameraResult = (ImageView) findViewById(R.id.camera_result);
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE);
         }
-        getCategory();
+        else {
+            getCategory();
+        }
     }
 
 
@@ -128,14 +129,18 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("success", "Success");
+                    getCategory();
+                }
+                else {
+                    if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE);
+                    }
                 }
             }
         }
