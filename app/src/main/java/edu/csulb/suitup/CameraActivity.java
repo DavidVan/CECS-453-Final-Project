@@ -87,15 +87,22 @@ public class CameraActivity extends AppCompatActivity{
                         switch(orientation) {
                             case ExifInterface.ORIENTATION_ROTATE_90:
                                 original = rotateImage(original, 90);
+                                System.out.println("CASE 90");
                                 break;
                             case ExifInterface.ORIENTATION_ROTATE_180:
                                 original = rotateImage(original, 180);
+                                System.out.println("CASE 180");
                                 break;
                             case ExifInterface.ORIENTATION_ROTATE_270:
                                 original = rotateImage(original, 270);
+                                System.out.println("CASE 270");
                                 break;
                             case ExifInterface.ORIENTATION_NORMAL:
+                                System.out.println("CASE NOTHING HAPPENS");
+                                break;
+
                             default:
+                                System.out.println("CASE DEFAULT");
                                 break;
                         }
 
