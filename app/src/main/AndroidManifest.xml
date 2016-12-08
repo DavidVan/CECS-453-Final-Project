@@ -23,6 +23,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <activity android:name=".LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,11 +46,12 @@
                 <action android:name="edu.csulb.suitup.CameraActivity" />
             </intent-filter>
         </activity>
+
         <activity android:name=".CameraActivity" />
         <activity android:name=".LocationActivity" />
         <activity android:name=".ItemDetailActivity" />
         <activity android:name=".WardrobeMgmtActivity" />
         <activity android:name=".ItemEditActivity"></activity>
+        <activity android:name=".RandomWardrobeActivity"></activity>
     </application>
-
 </manifest>

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     private static final String TAG_TABLE_CREATE = String.format(
             "CREATE TABLE %s(" +                                // TABLE NAME
                     "%s integer primary key autoincrement, " +   // _id
-                    "%s integer not null check(%s > 0), " +      // clothes id
+                    "%s integer not null check(%s >= 0), " +      // clothes id
                     "%s text, " +                                // tags
                     "foreign key(%s) references %s(%s))",       // clothes id foreign key to wardrobe table, _id
             TAG_TABLE_NAME,
@@ -65,9 +66,9 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     private static final String EXCLUSION_TABLE_CREATE = String.format(
             "CREATE TABLE %s(" +                                    //table name
                     "%s integer primary key autoincrement, " +       // _id
-                    "%s integer check(%s > 0), " +                   // top_id
-                    "%s integer check(%s > 0), " +                   // bottom id
-                    "%s integer check(%s > 0), " +                   // shoes id
+                    "%s integer check(%s >= 0), " +                   // top_id
+                    "%s integer check(%s >= 0), " +                   // bottom id
+                    "%s integer check(%s >= 0), " +                   // shoes id
                     "foreign key(%s) references %s(%s), " +          // top id foreign key to wardrobe table, _id
                     "foreign key(%s) references %s(%s), " +          // bottom id foreign key to wardrobe table, _id
                     "foreign key(%s) references %s(%s))",           // bottom id foreign key to wardrobe table, _id
@@ -106,13 +107,13 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     }
 
     // add a new exclusion passing in shirt/pants/shoes ids
-    public void addExclusion(int top, int bottom, int shoes){
+    public void addExclusion(WardrobeCombination wardrobe){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(TOP_ID_COLUMN, top);
-        values.put(BOTTOM_ID_COLUMN, bottom);
-        values.put(SHOES_ID_COLUMN, shoes);
+        values.put(TOP_ID_COLUMN, wardrobe.getTop());
+        values.put(BOTTOM_ID_COLUMN, wardrobe.getBottom());
+        values.put(SHOES_ID_COLUMN, wardrobe.getShoes());
 
         // Inserting Row
         db.insert(EXCLUSION_TABLE_NAME, null, values);

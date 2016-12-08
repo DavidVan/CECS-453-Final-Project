@@ -6,17 +6,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,9 +30,8 @@ import java.util.Locale;
 
 
 public class CameraActivity extends AppCompatActivity{
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
-    static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
+    static final int MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE = 1;
 
     private ImageView mCameraResult;
     private static String mImagePath;
@@ -48,11 +45,8 @@ public class CameraActivity extends AppCompatActivity{
         setContentView(R.layout.activity_camera);
         mCameraResult = (ImageView) findViewById(R.id.camera_result);
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
         }
         getCategory();
     }
@@ -62,18 +56,16 @@ public class CameraActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch(requestCode) {
-            case REQUEST_IMAGE_CAPTURE:
+            case MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE:
                 if (resultCode == RESULT_OK ) {
                     // Get a bitmap of the photo taken and the mask image
                     BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                     Bitmap original = BitmapFactory.decodeFile(mImagePath,bmOptions);
-                    Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.tshirt);
+//                    Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.tshirt);
 
-                    // This will rotate the original image 90degrees bc it comes out landscape before
-                    Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    original = Bitmap.createBitmap(original , 0, 0, original.getWidth(),
-                            original.getHeight(), matrix, true);
+                    original =  Bitmap.createScaledBitmap(original, 1376, 774, true);
+
+
 
                     // DISABLED MASKING FOR NOW...
                     // Use PorterDuff to mask original image with the mask image
@@ -84,18 +76,47 @@ public class CameraActivity extends AppCompatActivity{
 //                    canvas.drawBitmap(original, 0, 0, null);
 //                    canvas.drawBitmap(mask, 0, 0, paint);
 //                    paint.setXfermode(null);
-                    Bitmap result = original;
+
 
                     try {
+                        // This will rotate the original image depending on the type of phone
+                        ExifInterface ei = new ExifInterface(mImagePath);
+                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_UNDEFINED);
+
+                        switch(orientation) {
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                original = rotateImage(original, 90);
+                                System.out.println("CASE 90");
+                                break;
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                original = rotateImage(original, 180);
+                                System.out.println("CASE 180");
+                                break;
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                original = rotateImage(original, 270);
+                                System.out.println("CASE 270");
+                                break;
+                            case ExifInterface.ORIENTATION_NORMAL:
+                                System.out.println("CASE NOTHING HAPPENS");
+                                break;
+
+                            default:
+                                System.out.println("CASE DEFAULT");
+                                break;
+                        }
+
                         // Overwrite the original file with a resized version.
                         File pictureFile = new File(mImagePath);
                         FileOutputStream fos = new FileOutputStream(pictureFile);
-                        result.compress(Bitmap.CompressFormat.JPEG, 40, fos);
+                        original.compress(Bitmap.CompressFormat.JPEG, 50, fos);
                         fos.close();
 
                         // Adds the photo to the database
                         WardrobeDbHelper dbhelper = new WardrobeDbHelper(getApplicationContext());
                         dbhelper.addWardrobe("Sample Desc", mImagePath, mCategory);
+
+                        // closes the activity
                         finish();
 
                     } catch (Exception ex) {
@@ -103,14 +124,6 @@ public class CameraActivity extends AppCompatActivity{
                     }
                 }
                 break;
-
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (resultCode == RESULT_OK ) {
-                    // don't need to do anything here.
-                    //previous request already handles writing to storage
-                }
-                break;
-
         }
     }
 
@@ -118,7 +131,7 @@ public class CameraActivity extends AppCompatActivity{
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CAMERA: {
+            case MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -141,9 +154,9 @@ public class CameraActivity extends AppCompatActivity{
             }
             if (photoFile != null) {
                 // Attach a File URI to the intent to link camera output with the file created
-                Uri photoURI = Uri.fromFile(photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".provider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE);
             }
         }
     }
@@ -164,7 +177,7 @@ public class CameraActivity extends AppCompatActivity{
         return image;
     }
 
-
+    // Will open up a dialog to choose category of the apparel
     private void getCategory(){
         final String[] items = {"Top", "Bottom", "Shoes"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -182,4 +195,10 @@ public class CameraActivity extends AppCompatActivity{
         alert.show();
     }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
+                true);
+    }
 }
