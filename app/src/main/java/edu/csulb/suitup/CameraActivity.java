@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -64,11 +65,7 @@ public class CameraActivity extends AppCompatActivity{
 
                     original =  Bitmap.createScaledBitmap(original, 1376, 774, true);
 
-                    // This will rotate the original image 90degrees bc it comes out landscape before
-                    Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap result = Bitmap.createBitmap(original , 0, 0, original.getWidth(),
-                            original.getHeight(), matrix, true);
+
 
                     // DISABLED MASKING FOR NOW...
                     // Use PorterDuff to mask original image with the mask image
@@ -82,10 +79,30 @@ public class CameraActivity extends AppCompatActivity{
 
 
                     try {
+                        // This will rotate the original image depending on the type of phone
+                        ExifInterface ei = new ExifInterface(mImagePath);
+                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_UNDEFINED);
+
+                        switch(orientation) {
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                rotateImage(original, 90);
+                                break;
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                rotateImage(original, 180);
+                                break;
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                rotateImage(original, 270);
+                                break;
+                            case ExifInterface.ORIENTATION_NORMAL:
+                            default:
+                                break;
+                        }
+
                         // Overwrite the original file with a resized version.
                         File pictureFile = new File(mImagePath);
                         FileOutputStream fos = new FileOutputStream(pictureFile);
-                        result.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+                        original.compress(Bitmap.CompressFormat.JPEG, 50, fos);
                         fos.close();
 
                         // Adds the photo to the database
@@ -169,5 +186,12 @@ public class CameraActivity extends AppCompatActivity{
         });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
+                true);
     }
 }
