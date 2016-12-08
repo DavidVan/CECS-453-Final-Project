@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v.getId() == R.id.wardrobe_button){
             startActivity(new  Intent(this, WardrobeMgmtActivity.class));
         }
+        if(v.getId() == R.id.random_button){
+            startActivity(new  Intent(this, RandomWardrobeActivity.class));
+        }
     }
 
 }
