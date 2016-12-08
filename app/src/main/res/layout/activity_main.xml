@@ -9,15 +9,24 @@
     tools:context="edu.csulb.suitup.MainActivity"
     android:background="@drawable/suitbg">
 
-    <Button
-        android:id="@+id/location_button"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/weather_information"
+        android:text="@string/weather_information"
+        android:textColor="#fff"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Check Location"
-        android:background="@drawable/gradient"
-        android:layout_above="@+id/random_button"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp" />
+        android:layout_above="@+id/wardrobe_button" />
+
+    <TextView
+        android:id="@+id/location_information"
+        android:text="@string/location_information"
+        android:textColor="#fff"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/wardrobe_button"
+        android:layout_alignParentRight="true" />
 
     <Button
         android:id="@+id/random_button"
@@ -35,7 +44,7 @@
         android:layout_height="wrap_content"
         android:text="Take a Picture"
         android:background="@drawable/gradient"
-        android:layout_above="@+id/location_button"
+        android:layout_above="@+id/random_button"
         android:layout_marginBottom="10dp"
         android:layout_alignParentStart="true" />
 

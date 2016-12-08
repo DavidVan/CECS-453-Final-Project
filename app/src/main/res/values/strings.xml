@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Suit Up</string>
-    <string name="location_placeholder">No Location</string>
-    <string name="get_location">Get Location</string>
-    <string name="weather_placeholder">No Weather</string>
-    <string name="get_weahter">Get Weather</string>
+    <string name="menu_camera">Take Picture</string>
+    <string name="menu_uninstall">Uninstall</string>
+    <string name="weather_information">No Weather</string>
+    <string name="location_information">No Location</string>
 
     <string-array name="view_selection">
         <item>Top</item>

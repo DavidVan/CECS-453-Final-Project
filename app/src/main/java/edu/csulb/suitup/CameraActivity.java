@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class CameraActivity extends AppCompatActivity{
+public class CameraActivity extends AppCompatActivity {
     static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
     static final int MY_PERMISSIONS_REQUEST_IMAGE_CAPTURE_AND_READ_EXTERNAL_STORAGE = 1;
 

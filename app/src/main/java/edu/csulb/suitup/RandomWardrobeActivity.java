@@ -1,8 +1,12 @@
 package edu.csulb.suitup;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -139,5 +143,27 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
 
         // Make a new combination to replace current one on the GUI
         generateCombination();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity_listing, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_camera) {
+            Intent information = new Intent(this, CameraActivity.class);
+            startActivity(information);
+            return true;
+        }
+        else if (id == R.id.uninstall) {
+            Intent uninstall = new Intent(Intent.ACTION_DELETE, Uri.parse("package:edu.csulb.suitup"));
+            startActivity(uninstall);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
