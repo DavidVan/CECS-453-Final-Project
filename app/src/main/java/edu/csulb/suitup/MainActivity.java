@@ -30,8 +30,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button location_button = (Button) findViewById(R.id.location_button);
         location_button.setOnClickListener(this);
 
-        Button random_button = (Button) findViewById(R.id.wardrobe_button);
+        Button random_button = (Button) findViewById(R.id.random_button);
         random_button.setOnClickListener(this);
+
+        Button wardrobe_button = (Button) findViewById(R.id.wardrobe_button);
+        wardrobe_button.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
