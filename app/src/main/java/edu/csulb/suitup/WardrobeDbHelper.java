@@ -138,14 +138,45 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     public void addTag(int clothes_id, String tag){
         SQLiteDatabase db = this.getWritableDatabase();
 
+        /*
+        Troubleshooting
+         */
+        System.out.println("Adding tag: " + tag);
         ContentValues values = new ContentValues();
         values.put(CLOTHES_ID_COLUMN, clothes_id);
         values.put(TAGS_COLUMN, tag);
 
         // Inserting Row
-        db.insert(TAG_TABLE_NAME, null, values);
+        long res = db.insert(TAG_TABLE_NAME, null, values);
+        System.out.println(res);
         db.close();
     }
+
+    // Retrieve all
+    public List<Wardrobe> getAll()
+    {
+        List<Wardrobe> all = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + WARDROBE_TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(0);
+                String description = cursor.getString(1);
+                String filepath = cursor.getString(2);
+                String category = cursor.getString(3);
+
+                all.add(new Wardrobe(id, description, filepath, category));
+            }while(cursor.moveToNext());
+        }
+        // closing connections
+        cursor.close();
+        db.close();
+
+        return all;
+    }
+
 
     // Retrieve a list of Top Wardrobe Objects
     public List<Wardrobe> getTop(){
@@ -163,7 +194,6 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
                 String description = cursor.getString(1);
                 String filepath = cursor.getString(2);
                 String category = cursor.getString(3);
-
                 tops.add(new Wardrobe(id, description, filepath, category));
             }while(cursor.moveToNext());
         }
@@ -233,7 +263,7 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     // Not sure if we need this hashmap ... but might come in handy for the future.
     public HashMap<Integer, List<String>> getTags(){
         HashMap<Integer, List<String>> tagsmap = new HashMap<>();
-        String selectQuery = "SELECT * FROM " + EXCLUSION_TABLE_NAME;
+        String selectQuery = "SELECT * FROM " + TAG_TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -246,7 +276,8 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
 
                 // if clothes id already exists in hashmap, add the tag to its list
                 if(tagsmap.containsKey(id)){
-                    tagsmap.get(id).add(tag);
+                    boolean res = tagsmap.get(id).add(tag);
+
                 }
                 else{
                     // add a new k/v pair into the map
@@ -256,6 +287,7 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
                 }
             }while(cursor.moveToNext());
         }
+
 
         // closing connections
         cursor.close();
@@ -292,17 +324,34 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
     }
 
 
-
     // TODO: Fill these in
     public void removeExclusion(int exclusion_id){
 
     }
 
     public void removeWardrobe(int clothes_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(WARDROBE_TABLE_NAME, ID_COLUMN + "=" + clothes_id, null);
+    }
 
+    public void removeTag(int clothes_id){
+        //String deleteQuery = "DELETE FROM " + TAG_TABLE_NAME + "WHERE " + CLOTHES_ID_COLUMN + " = ?";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TAG_TABLE_NAME, CLOTHES_ID_COLUMN + "=" + Integer.toString(clothes_id), null);
     }
 
     public void removeTag(int clothes_id, String tag){
 
+
+    }
+
+    public void updateDescription(int id, String description)
+    {
+        //String updateQuery = "UPDATE " + WARDROBE_TABLE_NAME + "SET " + DESCRIPTION_COLUMN + "= ? WHERE " + ID_COLUMN + "= ?";
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DESCRIPTION_COLUMN, description);
+        db.update(WARDROBE_TABLE_NAME, contentValues, ID_COLUMN + "=" + id, null);
     }
 }

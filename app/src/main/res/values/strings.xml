@@ -4,4 +4,12 @@
     <string name="get_location">Get Location</string>
     <string name="weather_placeholder">No Weather</string>
     <string name="get_weahter">Get Weather</string>
+
+    <string-array name="view_selection">
+        <item>Top</item>
+        <item>Bottom</item>
+        <item>Shoes</item>
+        <item>All</item>
+    </string-array>
+
 </resources>

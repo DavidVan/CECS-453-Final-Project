@@ -8,6 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.csulb.suitup.MainActivity"
     android:background="@drawable/suitbg">
+<<<<<<< HEAD
 
     <Button
         android:id="@+id/location_button"
@@ -38,5 +39,46 @@
         android:layout_above="@+id/location_button"
         android:layout_marginBottom="10dp"
         android:layout_alignParentStart="true" />
+=======
+
+    <Button
+        android:id="@+id/location_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Check Location"
+        android:background="@drawable/gradient"
+        android:layout_above="@+id/random_button"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/random_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Suit Up!"
+        android:background="@drawable/gradient"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Take a Picture"
+        android:background="@drawable/gradient"
+        android:layout_above="@+id/location_button"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/wardrobe_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wardrobe"
+        android:layout_marginTop="14dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/location_button"/>
+>>>>>>> nhut_camera_update_1.1
 
 </RelativeLayout>

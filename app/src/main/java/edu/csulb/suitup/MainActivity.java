@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button location_button = (Button) findViewById(R.id.location_button);
         location_button.setOnClickListener(this);
 
-        Button random_button = (Button) findViewById(R.id.random_button);
+        Button random_button = (Button) findViewById(R.id.wardrobe_button);
         random_button.setOnClickListener(this);
     }
     @Override
@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v.getId()== R.id.location_button){
             startActivity(new Intent(this, LocationActivity.class));
         }
-        if(v.getId() == R.id.random_button){
-            startActivity(new  Intent(this, RandomWardrobeActivity.class));
+        if(v.getId() == R.id.wardrobe_button){
+            startActivity(new  Intent(this, WardrobeMgmtActivity.class));
         }
     }
 
