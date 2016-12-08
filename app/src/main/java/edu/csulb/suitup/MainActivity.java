@@ -4,6 +4,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -29,7 +33,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, LocationListener, JsonResponse {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, LocationListener, JsonResponse, SensorEventListener {
 
     private LocationManager locationManager;
     private LocationProvider gpsProvider;
@@ -38,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Double longitude;
     private String latLongLocation;
     private MainActivity instance = this;
+    private SensorManager sensorManager;
+    private long lastUpdate;
 
     private String weatherCondition;
 
@@ -59,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         longitude = 0.0;
         latLongLocation = "";
         weatherCondition = "";
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+        lastUpdate = System.currentTimeMillis();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -108,7 +118,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_GET_LOCATION_PERMISSIONS);
         }
-        String cityStateZip = "";
+        String city = "";
+        String state = "";
+        String zip = "";
         Geocoder geocoder = new Geocoder(this);
         List<Address> locations;
         Location lastLocation;
@@ -131,20 +143,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (locations != null) {
             if (!locations.isEmpty()) {
                 Address address = locations.get(0);
-                cityStateZip = address.getAddressLine(1);
+                city = address.getLocality();
+                state = address.getAdminArea().toUpperCase().substring(0, 2);
+                zip = address.getPostalCode();
             }
             else {
                 return latLongLocation;
             }
         }
-        if (cityStateZip != null) {
+        if (city != null && state != null && zip != null) {
             // Can use this if we need only city and state.
-            String[] locationInformation = cityStateZip.split("[, ]+");
-            String city = locationInformation[0];
-            String state = locationInformation[1];
             return city + ", " + state;
             // Below returns City, State, and ZIP.
-            // return cityStateZip;
+            // return city + ", " + state + " " + zip;
         }
         else {
             return "";
@@ -247,6 +258,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            float accelerationSquareRoot = (x * x + y * y + z * z) / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
+            long actualTime = System.currentTimeMillis();
+
+            if (accelerationSquareRoot >= 10) {
+                if (actualTime - lastUpdate < 500) {
+                    return;
+                }
+                lastUpdate = actualTime;
+                // Detected a shake. Show random outfit.
+                Intent intent = new Intent(this, RandomWardrobeActivity.class);
+                startActivity(intent);
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Nothing needed here...
+    }
+
+    public String getWeather() {
+        String weather = ((TextView) findViewById(R.id.weather_information)).getText().toString().toLowerCase();
+        Log.d("weather", weather);
+        String realWeather = "";
+        if (weather.contains("sunny") || weather.contains("clear")) {
+            realWeather = "sunny";
+        }
+        else if (weather.contains("cloud") || weather.contains("dark")) {
+            realWeather = "cloudy";
+        }
+        else if (weather.contains("rain") || weather.contains("shower") || weather.contains("storm") || weather.contains("thunder")) {
+            realWeather = "rain";
+        }
+        return realWeather;
     }
 
 }
