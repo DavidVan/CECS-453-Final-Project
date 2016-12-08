@@ -86,13 +86,13 @@ public class CameraActivity extends AppCompatActivity{
 
                         switch(orientation) {
                             case ExifInterface.ORIENTATION_ROTATE_90:
-                                rotateImage(original, 90);
+                                original = rotateImage(original, 90);
                                 break;
                             case ExifInterface.ORIENTATION_ROTATE_180:
-                                rotateImage(original, 180);
+                                original = rotateImage(original, 180);
                                 break;
                             case ExifInterface.ORIENTATION_ROTATE_270:
-                                rotateImage(original, 270);
+                                original = rotateImage(original, 270);
                                 break;
                             case ExifInterface.ORIENTATION_NORMAL:
                             default:
