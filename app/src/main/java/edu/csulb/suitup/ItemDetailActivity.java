@@ -60,6 +60,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             intent.putExtra("id", id);
             intent.putExtra("tags", tags);
             startActivity(intent);
+            finish();
         }
         if (v.getId()==R.id.delete_record_btn){
             dbHelper.removeWardrobe(id);
