@@ -2,6 +2,10 @@ package edu.csulb.suitup;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +20,7 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Random;
 
-public class RandomWardrobeActivity extends AppCompatActivity implements View.OnClickListener{
+public class RandomWardrobeActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
 
     private Random mRand = new Random();
     private WardrobeCombination mCurrentCombination; 
@@ -30,10 +34,17 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
     private ImageView bottomview;
     private ImageView shoesview;
 
+    private SensorManager sensorManager;
+    private long lastUpdate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_wardrobe);
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+        lastUpdate = System.currentTimeMillis();
 
         //Initialize Views
         topview = (ImageView) findViewById(R.id.top_view);
@@ -74,6 +85,19 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
         generateButton.setOnClickListener(this);
         excludeButton.setOnClickListener(this);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
     @Override
     public void onClick(View v) {
         if(v.getId()== R.id.generate_button){
@@ -165,5 +189,31 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            float accelerationSquareRoot = (x * x + y * y + z * z) / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
+            long actualTime = System.currentTimeMillis();
+
+            if (accelerationSquareRoot >= 10) {
+                if (actualTime - lastUpdate < 500) {
+                    return;
+                }
+                lastUpdate = actualTime;
+                // Detected a shake. Show new random outfit.
+                generateCombination();
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Nothing needed here.
     }
 }

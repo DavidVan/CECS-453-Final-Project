@@ -90,6 +90,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
     @Override
     public void onClick(View v) {
         if(v.getId()== R.id.camera_button){
