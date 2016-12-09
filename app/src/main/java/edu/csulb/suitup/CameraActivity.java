@@ -64,7 +64,7 @@ public class CameraActivity extends AppCompatActivity {
                     Bitmap original = BitmapFactory.decodeFile(mImagePath,bmOptions);
 //                    Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.tshirt);
 
-                    original =  Bitmap.createScaledBitmap(original, 1376, 774, true);
+                    //original =  Bitmap.createScaledBitmap(original, 1376, 774, true);
 
 
 
@@ -87,6 +87,7 @@ public class CameraActivity extends AppCompatActivity {
 
                         switch(orientation) {
                             case ExifInterface.ORIENTATION_ROTATE_90:
+                                original =  Bitmap.createScaledBitmap(original, 1376, 774, true);
                                 original = rotateImage(original, 90);
                                 System.out.println("CASE 90");
                                 break;
@@ -103,6 +104,7 @@ public class CameraActivity extends AppCompatActivity {
                                 break;
 
                             default:
+                                original =  Bitmap.createScaledBitmap(original, 744, 1376, true);
                                 System.out.println("CASE DEFAULT");
                                 break;
                         }
