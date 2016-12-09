@@ -65,12 +65,12 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                 //Toast.makeText(this, newTags[2], Toast.LENGTH_SHORT).show();
             }
             Toast.makeText(this, "Updated", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, WardrobeMgmtActivity.class));
             finish();
+
         }
         if (v.getId()==R.id.cancel_record_btn) {
-            startActivity(new Intent(this, WardrobeMgmtActivity.class));
             finish();
+
         }
     }
 

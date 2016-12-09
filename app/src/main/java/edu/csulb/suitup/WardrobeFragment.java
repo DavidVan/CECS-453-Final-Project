@@ -40,7 +40,6 @@ public class WardrobeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_wardrobe, container, false);
 
-
         ImageItemUtil imageItemUtil = new ImageItemUtil(getActivity());
         imageItems.addAll(imageItemUtil.getData("Top"));
         gridView = (GridView) view.findViewById(R.id.gridViewFragment);
@@ -65,6 +64,7 @@ public class WardrobeFragment extends Fragment {
                 intent.putExtra("path", item.getFilepath());
                 //Start details activity
                 startActivity(intent);
+
                 //getActivity().finish();
 
             }
