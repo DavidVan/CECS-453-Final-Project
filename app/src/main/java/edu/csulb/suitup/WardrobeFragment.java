@@ -65,8 +65,6 @@ public class WardrobeFragment extends Fragment {
                 intent.putExtra("path", item.getFilepath());
                 //Start details activity
                 startActivity(intent);
-                getActivity().finish();
-
             }
         });
 
