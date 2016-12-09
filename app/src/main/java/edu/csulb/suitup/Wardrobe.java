@@ -43,4 +43,18 @@ public class Wardrobe {
     public String getCategory(){
         return category;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        Wardrobe w = (Wardrobe) object;
+        if (this.description.equals(w.description) && this.filepath.equals(w.filepath) && this.category.equals(w.category)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.hashCode();
+    }
 }

@@ -4,6 +4,7 @@
     <string name="menu_uninstall">Uninstall</string>
     <string name="weather_information">No Weather</string>
     <string name="location_information">No Location</string>
+    <string name="use_weather">Use Weather</string>
 
     <string-array name="view_selection">
         <item>Top</item>

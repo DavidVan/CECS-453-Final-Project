@@ -71,7 +71,16 @@
         android:background="@drawable/gradient"
         android:textColor="#595959"/>
 
-
+    <CheckBox
+        android:id="@+id/use_weather"
+        android:buttonTint="#fff"
+        android:text="@string/use_weather"
+        android:textColor="#fff"
+        android:layout_below="@+id/exclude_button"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 

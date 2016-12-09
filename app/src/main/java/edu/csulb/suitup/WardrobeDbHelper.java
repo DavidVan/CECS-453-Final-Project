@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,6 +195,7 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
                 String description = cursor.getString(1);
                 String filepath = cursor.getString(2);
                 String category = cursor.getString(3);
+
                 tops.add(new Wardrobe(id, description, filepath, category));
             }while(cursor.moveToNext());
         }
@@ -256,6 +258,91 @@ public class WardrobeDbHelper extends SQLiteOpenHelper {
         db.close();
 
         return shoes;
+    }
+
+    // Retrieve a list of Wardrobe Objects with tag "sunny"
+    public List<Wardrobe> getSunny(){
+        List<Wardrobe> sunny = new ArrayList<>();
+        String selectQuery =
+                "SELECT * FROM " + WARDROBE_TABLE_NAME +
+                        " WHERE " + ID_COLUMN + " IN (SELECT " + ID_COLUMN +
+                        " FROM " + TAG_TABLE_NAME + " WHERE " + TAGS_COLUMN + " = ?)";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {"sunny"});
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(0);
+                String description = cursor.getString(1);
+                String filepath = cursor.getString(2);
+                String category = cursor.getString(3);
+
+                sunny.add(new Wardrobe(id, description, filepath, category));
+            }while(cursor.moveToNext());
+        }
+        // closing connections
+        cursor.close();
+        db.close();
+
+        return sunny;
+    }
+
+    // Retrieve a list of Wardrobe Objects with tag "cloudy"
+    public List<Wardrobe> getCloudy(){
+        List<Wardrobe> cloudy = new ArrayList<>();
+        String selectQuery =
+                "SELECT * FROM " + WARDROBE_TABLE_NAME +
+                        " WHERE " + ID_COLUMN + " IN (SELECT " + ID_COLUMN +
+                        " FROM " + TAG_TABLE_NAME + " WHERE " + TAGS_COLUMN + " = ?)";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {"cloudy"});
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(0);
+                String description = cursor.getString(1);
+                String filepath = cursor.getString(2);
+                String category = cursor.getString(3);
+                Log.d("hello", category);
+
+                cloudy.add(new Wardrobe(id, description, filepath, category));
+            }while(cursor.moveToNext());
+        }
+        // closing connections
+        cursor.close();
+        db.close();
+
+        return cloudy;
+    }
+
+    // Retrieve a list of Wardrobe Objects with tag "rainy"
+    public List<Wardrobe> getRainy(){
+        List<Wardrobe> rainy = new ArrayList<>();
+        String selectQuery =
+                "SELECT * FROM " + WARDROBE_TABLE_NAME +
+                        " WHERE " + ID_COLUMN + " IN (SELECT " + ID_COLUMN +
+                        " FROM " + TAG_TABLE_NAME + " WHERE " + TAGS_COLUMN + " = ?)";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {"rainy"});
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(0);
+                String description = cursor.getString(1);
+                String filepath = cursor.getString(2);
+                String category = cursor.getString(3);
+
+                rainy.add(new Wardrobe(id, description, filepath, category));
+            }while(cursor.moveToNext());
+        }
+        // closing connections
+        cursor.close();
+        db.close();
+
+        return rainy;
     }
 
     // Retrieve a HashMap for a wardrobe's tags

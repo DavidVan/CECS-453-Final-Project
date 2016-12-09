@@ -109,10 +109,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, CameraActivity.class));
         }
         if(v.getId() == R.id.wardrobe_button){
-            startActivity(new  Intent(this, WardrobeMgmtActivity.class));
+            Intent intent = new Intent(this, WardrobeMgmtActivity.class);
+            intent.putExtra("weather", getWeather());
+            startActivity(intent);
         }
         if(v.getId() == R.id.random_button){
-            startActivity(new  Intent(this, RandomWardrobeActivity.class));
+            startActivity(new Intent(this, RandomWardrobeActivity.class));
         }
     }
 
@@ -291,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 lastUpdate = actualTime;
                 // Detected a shake. Show random outfit.
                 Intent intent = new Intent(this, RandomWardrobeActivity.class);
+                intent.putExtra("weather", getWeather());
                 startActivity(intent);
             }
         }
@@ -303,18 +306,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public String getWeather() {
         String weather = ((TextView) findViewById(R.id.weather_information)).getText().toString().toLowerCase();
-        Log.d("weather", weather);
-        String realWeather = "";
         if (weather.contains("sunny") || weather.contains("clear")) {
-            realWeather = "sunny";
+            return "sunny";
         }
-        else if (weather.contains("cloud") || weather.contains("dark")) {
-            realWeather = "cloudy";
+        else if (weather.contains("cloud") || weather.contains("cloudy") || weather.contains("dark")) {
+            return "cloudy";
         }
-        else if (weather.contains("rain") || weather.contains("shower") || weather.contains("storm") || weather.contains("thunder")) {
-            realWeather = "rain";
+        else if (weather.contains("rain") || weather.contains("rainy") || weather.contains("shower") || weather.contains("storm") || weather.contains("thunder")) {
+            return "rainy";
         }
-        return realWeather;
+        return "error";
     }
 
 }

@@ -9,14 +9,18 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -27,6 +31,11 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
     private List<Wardrobe> mTopList;
     private List<Wardrobe> mBottomList;
     private List<Wardrobe> mShoesList;
+    private List<Wardrobe> mWeatherList;
+    private List<Wardrobe> mWeatherListTops;
+    private List<Wardrobe> mWeatherListBottoms;
+    private List<Wardrobe> mWeatherListShoes;
+
 
     private List<WardrobeCombination> mExclusions;
 
@@ -34,13 +43,21 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
     private ImageView bottomview;
     private ImageView shoesview;
 
+    private CheckBox useWeather;
+
     private SensorManager sensorManager;
     private long lastUpdate;
+
+    private String weather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_wardrobe);
+
+        Intent intent = getIntent();
+        weather = intent.getExtras().getString("weather");
+
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
@@ -51,12 +68,48 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
         bottomview  = (ImageView) findViewById(R.id.bottom_view);
         shoesview = (ImageView) findViewById(R.id.shoes_view);
 
+        useWeather = (CheckBox) findViewById(R.id.use_weather);
+
         // Get list of wardrobe from database
         WardrobeDbHelper dbhelper = new WardrobeDbHelper(getApplicationContext());
 
         mTopList = dbhelper.getTop();
         mBottomList = dbhelper.getBottom();
         mShoesList = dbhelper.getShoes();
+
+
+        if (weather.equals("sunny")) {
+            mWeatherList = dbhelper.getSunny();
+        }
+        else if (weather.equals("cloudy")) {
+            mWeatherList = dbhelper.getCloudy();
+        }
+        else if (weather.equals("rainy")) {
+            mWeatherList = dbhelper.getRainy();
+        }
+        else {
+            mWeatherList = new ArrayList<>();
+        }
+
+        mWeatherListTops = new ArrayList<>();
+        mWeatherListBottoms = new ArrayList<>();
+        mWeatherListShoes = new ArrayList<>();
+
+        for (Wardrobe w : mWeatherList) {
+            if (w.getCategory().equals("Top")) {
+                mWeatherListTops.add(w);
+            }
+            if (w.getCategory().equals("Bottom")) {
+                mWeatherListBottoms.add(w);
+            }
+            if (w.getCategory().equals("Shoes")) {
+                mWeatherListShoes.add(w);
+            }
+        }
+        Log.d("sizeDavid", "" + mWeatherList.size());
+        Log.d("sizeDavid", "" + mWeatherListTops.size());
+        Log.d("sizeDavid", "" + mWeatherListBottoms.size());
+        Log.d("sizeDavid", "" + mWeatherListShoes.size());
 
         // get list of exclusions from database
         mExclusions = dbhelper.getExclusions();
@@ -132,9 +185,41 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
 
         // keep looking for a combination until you find one that's not excluded
         while(!uniquefound) {
-            randtop = generateRandom(mTopList);
-            randbottom = generateRandom(mBottomList);
-            randshoes = generateRandom(mShoesList);
+            if (!mWeatherListTops.isEmpty() && useWeather.isChecked()) {
+                List<Wardrobe> weatherTops = new ArrayList<>();
+                for (Wardrobe w : mTopList) {
+                    weatherTops.add(w);
+                }
+                weatherTops.retainAll(mWeatherListTops);
+                randtop = generateRandom(weatherTops);
+            }
+            else {
+                randtop = generateRandom(mTopList);
+            }
+
+            if (!mWeatherListBottoms.isEmpty() && useWeather.isChecked()) {
+                List<Wardrobe> weatherBottoms = new ArrayList<>();
+                for (Wardrobe w : mBottomList) {
+                    weatherBottoms.add(w);
+                }
+                weatherBottoms.retainAll(mWeatherListBottoms);
+                randbottom = generateRandom(weatherBottoms);
+            }
+            else {
+                randbottom = generateRandom(mBottomList);
+            }
+
+            if (!mWeatherListShoes.isEmpty() && useWeather.isChecked()) {
+                List<Wardrobe> weatherShoes = new ArrayList<>();
+                for (Wardrobe w : mShoesList) {
+                    weatherShoes.add(w);
+                }
+                weatherShoes.retainAll(mWeatherListShoes);
+                randshoes = generateRandom(weatherShoes);
+            }
+            else {
+                randshoes = generateRandom(mShoesList);
+            }
 
             wardcombo = new WardrobeCombination(randtop.getId(), randbottom.getId(), randshoes.getId());
             // If new generated combo is not the same as the current one
