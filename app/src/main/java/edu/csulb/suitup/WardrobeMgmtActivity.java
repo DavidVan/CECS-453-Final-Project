@@ -24,6 +24,9 @@ public class WardrobeMgmtActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private Spinner viewSelectionSpinner;
+    private ArrayAdapter<CharSequence> adapter;
+    private WardrobeFragment wardrobeFragment;
+    private String type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,38 +34,42 @@ public class WardrobeMgmtActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wardrobe_mgmt);
 
         viewSelectionSpinner = (Spinner)findViewById(R.id.viewSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(WardrobeMgmtActivity.this, R.array.view_selection, android.R.layout.simple_spinner_dropdown_item);
+        adapter = ArrayAdapter.createFromResource(WardrobeMgmtActivity.this, R.array.view_selection, android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         viewSelectionSpinner.setAdapter(adapter);
         viewSelectionSpinner.setSelection(3);
 
+        wardrobeFragment = (WardrobeFragment)getFragmentManager().findFragmentById(R.id.wardrobe_fragment);
+
         viewSelectionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                WardrobeFragment wardrobeFragment = (WardrobeFragment)getFragmentManager().findFragmentById(R.id.wardrobe_fragment);
                 switch (viewSelectionSpinner.getSelectedItem().toString()){
                     case "Top":
                         Toast.makeText(WardrobeMgmtActivity.this,viewSelectionSpinner.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
                         wardrobeFragment.setType("Top");
+                        type = "Top";
                         getFragmentManager().beginTransaction().detach(wardrobeFragment).attach(wardrobeFragment).commit();
                         break;
                     case "Bottom":
                         Toast.makeText(WardrobeMgmtActivity.this,viewSelectionSpinner.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
                         wardrobeFragment.setType("Bottom");
+                        type = "Bottom";
                         getFragmentManager().beginTransaction().detach(wardrobeFragment).attach(wardrobeFragment).commit();
                         break;
                     case "Shoes":
                         Toast.makeText(WardrobeMgmtActivity.this,viewSelectionSpinner.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
                         wardrobeFragment.setType("Shoes");
+                        type = "Shoes";
                         getFragmentManager().beginTransaction().detach(wardrobeFragment).attach(wardrobeFragment).commit();
                         break;
                     case "All":
                         Toast.makeText(WardrobeMgmtActivity.this,viewSelectionSpinner.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
                         wardrobeFragment.setType("All");
+                        type = "All";
                         getFragmentManager().beginTransaction().detach(wardrobeFragment).attach(wardrobeFragment).commit();
                         break;
                 }
-
             }
 
             @Override
@@ -70,7 +77,15 @@ public class WardrobeMgmtActivity extends AppCompatActivity {
 
             }
         });
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        wardrobeFragment.setType(type);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
