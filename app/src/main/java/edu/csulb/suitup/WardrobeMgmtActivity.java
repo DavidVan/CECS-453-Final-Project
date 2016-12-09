@@ -26,7 +26,7 @@ public class WardrobeMgmtActivity extends AppCompatActivity {
     private Spinner viewSelectionSpinner;
     private ArrayAdapter<CharSequence> adapter;
     private WardrobeFragment wardrobeFragment;
-    private String type = "";
+    private String type = "All";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
