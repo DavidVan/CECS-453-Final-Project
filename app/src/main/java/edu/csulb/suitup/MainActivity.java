@@ -79,14 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gpsProvider = locationManager.getProvider(LocationManager.GPS_PROVIDER);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             setLocation();
-            String location = getLocation();
-
-            String yql = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"" + location + "\")";
-
-            String jsonURL = "http://query.yahooapis.com/v1/public/yql?q=" + yql + "&format=json&env=store://datatables.org/alltableswithkeys";
-
-            WeatherTask task = new WeatherTask(instance, location);
-            task.execute(jsonURL);
+            setWeather();
         }
 
     }
@@ -101,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResume() {
         super.onResume();
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+        setLocation();
+        setWeather();
     }
 
     @Override
@@ -125,7 +120,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         TextView locationText = (TextView) findViewById(R.id.location_information);
         String location = getLocation();
-        locationText.setText(location);
+        if (!location.equals("")) {
+            locationText.setText(location);
+        }
+    }
+
+    public void setWeather() {
+        String location = getLocation();
+
+        String yql = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"" + location + "\")";
+
+        String jsonURL = "http://query.yahooapis.com/v1/public/yql?q=" + yql + "&format=json&env=store://datatables.org/alltableswithkeys";
+
+        WeatherTask task = new WeatherTask(instance, location);
+        task.execute(jsonURL);
     }
 
     public String getLocation() {
@@ -166,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return latLongLocation;
             }
         }
-        if (city != null && state != null && zip != null) {
+        if (city != null && !city.equals("") && state != null && !state.equals("") && zip != null && !zip.equals("")) {
             // Can use this if we need only city and state.
             return city + ", " + state;
             // Below returns City, State, and ZIP.
@@ -186,14 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     gpsProvider = locationManager.getProvider(LocationManager.GPS_PROVIDER);
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
                     setLocation();
-                    String location = getLocation();
-
-                    String yql = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"" + location + "\")";
-
-                    String jsonURL = "http://query.yahooapis.com/v1/public/yql?q=" + yql + "&format=json&env=store://datatables.org/alltableswithkeys";
-
-                    WeatherTask task = new WeatherTask(instance, location);
-                    task.execute(jsonURL);
+                    setWeather();
                 }
                 else {
                     locationManager = null;

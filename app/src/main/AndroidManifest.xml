@@ -48,11 +48,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CameraActivity" />
-        <activity android:name=".ItemDetailActivity" />
-        <activity android:name=".WardrobeMgmtActivity" />
-        <activity android:name=".ItemEditActivity"/>
-        <activity android:name=".RandomWardrobeActivity"/>
+        <activity android:name=".CameraActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ItemDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".WardrobeMgmtActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ItemEditActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RandomWardrobeActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
