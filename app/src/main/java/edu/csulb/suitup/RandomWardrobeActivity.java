@@ -63,7 +63,6 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
             weather = "";
         }
 
-
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
         lastUpdate = System.currentTimeMillis();
@@ -111,10 +110,6 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
                 mWeatherListShoes.add(w);
             }
         }
-        Log.d("sizeDavid", "" + mWeatherList.size());
-        Log.d("sizeDavid", "" + mWeatherListTops.size());
-        Log.d("sizeDavid", "" + mWeatherListBottoms.size());
-        Log.d("sizeDavid", "" + mWeatherListShoes.size());
 
         // get list of exclusions from database
         mExclusions = dbhelper.getExclusions();
