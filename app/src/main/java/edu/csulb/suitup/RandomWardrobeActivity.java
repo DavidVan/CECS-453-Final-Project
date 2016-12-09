@@ -123,14 +123,17 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
         if(mTopList.size() < 1){
             Toast.makeText(getApplicationContext(), "Please add a top apparel", Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
         else if(mBottomList.size() < 1){
             Toast.makeText(getApplicationContext(), "Please add a bottom apparel", Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
         else if(mShoesList.size() < 1){
             Toast.makeText(getApplicationContext(), "Please add a pair of shoes", Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
         else {
             generateCombination();
@@ -179,6 +182,7 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
             Toast.makeText(getApplicationContext(), "Not enough Apparel added to make a combination",
                     Toast.LENGTH_SHORT).show();
             finish();
+            return;
         }
 
         WardrobeCombination wardcombo;
