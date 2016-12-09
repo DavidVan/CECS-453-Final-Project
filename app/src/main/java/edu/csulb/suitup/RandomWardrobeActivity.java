@@ -56,7 +56,12 @@ public class RandomWardrobeActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_random_wardrobe);
 
         Intent intent = getIntent();
-        weather = intent.getExtras().getString("weather");
+        if (intent.getExtras() != null) {
+            weather = intent.getExtras().getString("weather");
+        }
+        else {
+            weather = "";
+        }
 
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
